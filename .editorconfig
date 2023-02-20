@@ -1,0 +1,29 @@
+# http://editorconfig.org
+
+# Остановить поиск файлов .editorconfig
+root = true
+
+[*]
+# Использовать мягкую или жесткую табуляцию
+# Доступные значения - tab, space
+indent_style = space
+
+# Ширина отступа для мягкой табуляции
+# Доступные значения - целое число, tab
+indent_size = 2
+
+# Обозначение конца строки в файле
+# Доступные значения - lf, crlf, cr
+end_of_line = lf
+
+# Кодировка файлов
+# Доступные значения - latin1, utf-8, utf-16be, utf-16le
+charset = utf-8
+
+# Убирать пробелы в конце строки
+# Доступные значения - true, false
+trim_trailing_whitespace = true
+
+# Вставлять новую пустую строку в конце файла
+# Доступные значения - true, false
+insert_final_newline = true
