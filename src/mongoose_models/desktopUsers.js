@@ -25,7 +25,7 @@ class DesktopUser {
 }
 
 class TaxiCompanyOwner extends DesktopUser {
-  phone = {
+  login = {
     type: String,
     minLength: 12,
     maxLength: 12,
