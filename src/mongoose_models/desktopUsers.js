@@ -24,7 +24,7 @@ class DesktopUser {
   };
 }
 
-class TaxiCompanyOwner extends DesktopUser {
+class TaxiOwner extends DesktopUser {
   login = {
     type: String,
     minLength: 12,
@@ -35,7 +35,7 @@ class TaxiCompanyOwner extends DesktopUser {
 
   role = {
     type: String,
-    enum: ['taxiCompanyOwner'],
+    enum: ['taxiOwner'],
     required: true,
   };
 }
@@ -56,10 +56,10 @@ class Dispatcher extends DesktopUser {
   };
 }
 
-const taxiCompanyOwnerSchema = new mongoose.Schema(new TaxiCompanyOwner());
+const taxiOwnerSchema = new mongoose.Schema(new TaxiOwner());
 const dispatcherSchema = new mongoose.Schema(new Dispatcher());
 
 module.exports = {
-  taxiCompanyOwnerModel: mongoose.model('taxiCompanyOwner', taxiCompanyOwnerSchema),
+  taxiOwnerModel: mongoose.model('taxiOwner', taxiOwnerSchema),
   dispatcherModel: mongoose.model('dispatcher', dispatcherSchema),
 };
