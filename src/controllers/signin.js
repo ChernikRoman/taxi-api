@@ -24,7 +24,7 @@ function desktopSignIn(req, res, next) {
       .then((user) => {
         if (user && bcrypt.compareSync(password, user.password)) {
           const token = jwt.sign(user, SECRET_KEY, { expiresIn: '7d' });
-          res.cookie('jwt', token, {
+          res.cookie('token', token, {
             maxAge: 3600000 * 24 * 7,
             httpOnly: true,
             sameSite: true,

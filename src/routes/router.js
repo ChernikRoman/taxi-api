@@ -1,8 +1,10 @@
 const router = require('express').Router();
-const signUpRouting = require('./signup/index.js');
-const signInRouting = require('./signin/index.js');
+const signUpRouter = require('./signup/index.js');
+const signInRouter = require('./signin/index.js');
+const signOutRouter = require('./signout/index.js');
 
-router.use('/signup', signUpRouting);
-router.use('/signin', signInRouting);
+router.use('/signup', signUpRouter);
+router.use('/signin', signInRouter);
+router.use('/signout', signOutRouter);
 
 module.exports = router;
