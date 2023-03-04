@@ -1,28 +1,32 @@
 const bcrypt = require('bcrypt');
 const { taxiOwnerModel, dispatcherModel } = require('../mongoose_models/desktopUsers.js');
 
-function createTaxiOwner(req, res, next) {
+function desktopSignUp(req, res, next) {
   const {
     firstName, lastName, role, login, password,
   } = req.body;
 
-  taxiOwnerModel.create({
-    firstName, lastName, role, login, password: bcrypt.hashSync(password, 10),
-  })
-    .then(() => res.status(201).end())
-    .catch((err) => next(new Error(err.message)));
+  let dbModel;
+
+  switch (role) {
+    case 'taxiOwner':
+      dbModel = taxiOwnerModel;
+      break;
+    case 'dispatcher':
+      dbModel = dispatcherModel;
+      break;
+    default:
+  }
+
+  if (dbModel) {
+    dbModel.create({
+      firstName, lastName, role, login, password: bcrypt.hashSync(password, 10),
+    })
+      .then(() => res.status(201).end())
+      .catch((err) => next(new Error(err.message)));
+  } else {
+    next(new Error('Роль не указана'));
+  }
 }
 
-function createDispatcher(req, res, next) {
-  const {
-    firstName, lastName, role, login, password,
-  } = req.body;
-
-  dispatcherModel.create({
-    firstName, lastName, role, login, password: bcrypt.hashSync(password, 10),
-  })
-    .then(() => res.status(201).end())
-    .catch((err) => next(new Error(err.message)));
-}
-
-module.exports = { createTaxiOwner, createDispatcher };
+module.exports = desktopSignUp;

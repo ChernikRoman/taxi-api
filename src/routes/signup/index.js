@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { createTaxiOwner, createDispatcher } = require('../../controllers/signup.js');
+const desktopSignUp = require('../../controllers/signup.js');
 
-router.post('/taxi-owner', createTaxiOwner);
-router.post('/dispatcher', createDispatcher);
+router.post('/desktop', desktopSignUp);
 
 module.exports = router;
