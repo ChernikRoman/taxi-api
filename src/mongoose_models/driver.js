@@ -16,9 +16,10 @@ const driverSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['driver'],
+    default: 'driver',
     require: true,
   },
-  cars: {
+  car: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'car',
   },
@@ -37,4 +38,4 @@ const driverSchema = new mongoose.Schema({
   },
 });
 
-mongoose.model('driver', driverSchema);
+module.exports = mongoose.model('driver', driverSchema);
