@@ -13,7 +13,7 @@ app.use(router);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  res.send({ err: err.message });
+  res.status(400).send({ err: err.message });
 });
 
 mongoose.set({ strictQuery: false });
