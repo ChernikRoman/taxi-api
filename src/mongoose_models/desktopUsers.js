@@ -38,6 +38,11 @@ class TaxiOwner extends DesktopUser {
     enum: ['taxiOwner'],
     required: true,
   };
+
+  taxiCompany = {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'taxiCompanye',
+  };
 }
 
 class Dispatcher extends DesktopUser {
