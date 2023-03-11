@@ -10,4 +10,14 @@ async function createCar(req, res, next) {
   });
 }
 
-module.exports = createCar;
+async function getCars(req, res, next) {
+  carModel.find({}, (err, cars) => {
+    if (err) {
+      next(new Error(err.message));
+    } else {
+      res.status(201).send({ result: cars });
+    }
+  });
+}
+
+module.exports = { createCar, getCars };

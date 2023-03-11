@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const createCar = require('../../controllers/cars.js');
+const { createCar, getCars } = require('../../controllers/cars.js');
 
 router.post('/', createCar);
+router.get('/', getCars);
 
 module.exports = router;
