@@ -1,23 +1,66 @@
 const carModel = require('../mongoose_models/car.js');
 
 async function createCar(req, res, next) {
-  carModel.create(req.body, (err, car) => {
-    if (err) {
-      next(new Error(err.message));
-    } else {
-      res.status(201).send({ id: car._id });
-    }
-  });
+  try {
+    const car = await carModel.create(req.body);
+    res.status(201).send({ id: car._id });
+  } catch (err) {
+    next(new Error(err.message));
+  }
 }
 
 async function getCars(req, res, next) {
-  carModel.find({}, (err, cars) => {
-    if (err) {
-      next(new Error(err.message));
-    } else {
-      res.status(201).send({ result: cars });
-    }
-  });
+  try {
+    const cars = await carModel
+      .find()
+      .lean();
+
+    res.status(200).send({ data: cars });
+  } catch (err) {
+    next(new Error(err.message));
+  }
 }
 
-module.exports = { createCar, getCars };
+async function getCarById(req, res, next) {
+  try {
+    const car = await carModel
+      .findById(req.params.id)
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: car });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+async function patchCar(req, res, next) {
+  try {
+    const car = await carModel
+      .findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: car });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+async function deleteCar(req, res, next) {
+  try {
+    const car = await carModel
+      .findByIdAndRemove(req.params.id)
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: { id: car._id } });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+module.exports = {
+  createCar,
+  getCars,
+  getCarById,
+  patchCar,
+  deleteCar,
+};
