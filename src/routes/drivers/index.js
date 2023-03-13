@@ -1,7 +1,14 @@
 const router = require('express').Router();
-const { getDriver, createDriver } = require('../../controllers/drivers.js');
+const {
+  createDriver,
+  getDrivers,
+  getDriverById,
+  patchDriver,
+} = require('../../controllers/drivers.js');
 
-router.get('/', getDriver);
 router.post('/', createDriver);
+router.get('/', getDrivers);
+router.get('/:id', getDriverById);
+router.patch('/:id', patchDriver);
 
 module.exports = router;
