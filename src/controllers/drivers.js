@@ -1,45 +1,79 @@
 const bcrypt = require('bcrypt');
 const driverModel = require('../mongoose_models/driver.js');
 
-function getDriver(req, res, next) {
-  driverModel.findById(req.query.id, (err, data) => {
-    if (err) {
-      next(new Error(err.message));
-    } else {
-      const driver = {
-        id: data._id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        car: {
-          id: data.car._id,
-          make: data.car.make,
-          model: data.car.model,
-          year: data.car.year,
-          licenseNumber: data.car.licenseNumber,
-        },
-      };
-
-      res.status(200).send(driver);
-    }
-  }).populate('car');
-}
-
 function createDriver(req, res, next) {
-  const regData = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    car: req.body.car,
-    login: req.body.login,
-    password: bcrypt.hashSync(req.body.password, 10),
-  };
+  req.body.auth.password = bcrypt.hashSync(req.body.auth.password, 10);
 
-  driverModel.create(regData, (err, driver) => {
-    if (err) {
-      next(new Error(err.message));
-    } else {
-      res.status(201).send({ id: driver._id });
-    }
-  });
+  driverModel
+    .create({ ...req.body })
+    .then((driver) => {
+      res.status(201).send({ data: { _id: driver._id } });
+    })
+    .catch((err) => next(new Error(err.message)));
 }
 
-module.exports = { getDriver, createDriver };
+async function getDrivers(req, res, next) {
+  try {
+    const drivers = await driverModel
+      .find({})
+      .populate({ path: 'info.car', select: '-__v' })
+      .select('-auth -__v')
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: drivers });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+async function getDriverById(req, res, next) {
+  try {
+    const driver = await driverModel
+      .findById(req.params.id)
+      .populate({ path: 'info.car', select: '-__v' })
+      .select('-auth -__v')
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: driver });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+async function patchDriver(req, res, next) {
+  try {
+    if (req.body?.auth?.password) {
+      req.body.auth.password = bcrypt.hashSync(req.body.auth.password, 10);
+    }
+
+    const driver = await driverModel
+      .findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+      .populate({ path: 'info.car', select: '-__v' })
+      .select('-auth -__v')
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: driver });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+async function deleteDriver(req, res, next) {
+  try {
+    const driver = await driverModel
+      .findByIdAndRemove(req.params.id)
+      .orFail(() => next(new Error('Document not found')));
+
+    res.status(200).send({ data: { id: driver._id } });
+  } catch (err) {
+    next(new Error(err.message));
+  }
+}
+
+module.exports = {
+  createDriver,
+  getDrivers,
+  getDriverById,
+  patchDriver,
+  deleteDriver,
+};
