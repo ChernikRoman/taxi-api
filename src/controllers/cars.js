@@ -13,6 +13,7 @@ async function getCars(req, res, next) {
   try {
     const cars = await carModel
       .find()
+      .select('-__v')
       .lean();
 
     res.status(200).send({ data: cars });
@@ -25,6 +26,7 @@ async function getCarById(req, res, next) {
   try {
     const car = await carModel
       .findById(req.params.id)
+      .select('-__v')
       .orFail(() => next(new Error('Document not found')));
 
     res.status(200).send({ data: car });
@@ -37,6 +39,7 @@ async function patchCar(req, res, next) {
   try {
     const car = await carModel
       .findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+      .select('-__v')
       .orFail(() => next(new Error('Document not found')));
 
     res.status(200).send({ data: car });
