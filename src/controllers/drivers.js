@@ -16,7 +16,7 @@ async function getDrivers(req, res, next) {
   try {
     const drivers = await driverModel
       .find({})
-      .populate({ path: 'info.car', select: '-__v' })
+      .populate('car')
       .select('-auth -__v')
       .orFail(() => next(new Error('Document not found')));
 
